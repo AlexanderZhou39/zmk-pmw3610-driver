@@ -566,16 +566,16 @@ static enum pixart_input_mode get_input_mode_for_current_layer(const struct devi
     uint8_t curr_layer = zmk_keymap_highest_layer_active();
 
     if (curr_layer == config->fast_scroll_layer) {
-      return FAST_SCROLL
+      return FAST_SCROLL;
     }
     if (curr_layer == config->scroll_snipe_layer) {
-      return SCROLL_SNIPE
+      return SCROLL_SNIPE;
     }
     if (curr_layer == config->scroll_layer) {
-      return SCROLL
+      return SCROLL;
     }
     if (curr_layer == config->snipe_layer) {
-      return SNIPE
+      return SNIPE;
     }
     return MOVE;
 }
