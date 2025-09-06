@@ -719,13 +719,32 @@ static int pmw3610_report_data(const struct device *dev) {
             // scroll behavior
             data->scroll_delta_x += x;
             data->scroll_delta_y += y;
-            if (abs(data->scroll_delta_y) > CONFIG_PMW3610_SCROLL_TICK) {
+            
+            // Get the appropriate scroll tick threshold for the current mode
+            int scroll_tick;
+            switch (input_mode) {
+            case FAST_SCROLL:
+                scroll_tick = CONFIG_PMW3610_FAST_SCROLL_TICK;
+                break;
+            case SCROLL_SNIPE:
+                scroll_tick = CONFIG_PMW3610_SCROLL_SNIPE_TICK;
+                break;
+            case PERMA_SCROLL:
+                scroll_tick = CONFIG_PMW3610_PERMA_SCROLL_TICK;
+                break;
+            case SCROLL:
+            default:
+                scroll_tick = CONFIG_PMW3610_SCROLL_TICK;
+                break;
+            }
+            
+            if (abs(data->scroll_delta_y) > scroll_tick) {
                 input_report_rel(dev, INPUT_REL_WHEEL,
                                  data->scroll_delta_y > 0 ? PMW3610_SCROLL_Y_NEGATIVE : PMW3610_SCROLL_Y_POSITIVE,
                                  true, K_FOREVER);
                 data->scroll_delta_x = 0;
                 data->scroll_delta_y = 0;
-            } else if (abs(data->scroll_delta_x) > CONFIG_PMW3610_SCROLL_TICK) {
+            } else if (abs(data->scroll_delta_x) > scroll_tick) {
                 input_report_rel(dev, INPUT_REL_HWHEEL,
                                  data->scroll_delta_x > 0 ? PMW3610_SCROLL_X_NEGATIVE : PMW3610_SCROLL_X_POSITIVE,
                                  true, K_FOREVER);

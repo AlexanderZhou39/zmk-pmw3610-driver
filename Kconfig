@@ -83,6 +83,24 @@ config PMW3610_SCROLL_TICK
     help
       Scroll tick value.
 
+config PMW3610_FAST_SCROLL_TICK
+    int "PMW3610's required ticks to produce a fast scroll report"
+    default 20
+    help
+      Fast scroll tick value. Lower values make scrolling faster.
+
+config PMW3610_SCROLL_SNIPE_TICK
+    int "PMW3610's required ticks to produce a scroll snipe report"
+    default 50
+    help
+      Scroll snipe tick value.
+
+config PMW3610_PERMA_SCROLL_TICK
+    int "PMW3610's required ticks to produce a perma scroll report"
+    default 50
+    help
+      Perma scroll tick value.
+
 choice
     prompt "Select PMW3610's polling rate"
     default PMW3610_POLLING_RATE_250
