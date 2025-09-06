@@ -610,7 +610,7 @@ static int pmw3610_report_data(const struct device *dev) {
         dividor = CONFIG_PMW3610_SNIPE_CPI_DIVIDOR;
         break;
     case SCROLL_SNIPE:
-        set_cpi_if_needed(dev, CONFIG_PMW3610_SCROLL_SNIPE_CPI)
+        set_cpi_if_needed(dev, CONFIG_PMW3610_SCROLL_SNIPE_CPI);
         if (input_mode_changed) {
             data->scroll_delta_x = 0;
             data->scroll_delta_y = 0;
@@ -618,7 +618,7 @@ static int pmw3610_report_data(const struct device *dev) {
         dividor = 1;
         break;
     case FAST_SCROLL:
-        set_cpi_if_needed(dev, CONFIG_PMW3610_FAST_SCROLL_CPI)
+        set_cpi_if_needed(dev, CONFIG_PMW3610_FAST_SCROLL_CPI);
         if (input_mode_changed) {
             data->scroll_delta_x = 0;
             data->scroll_delta_y = 0;
