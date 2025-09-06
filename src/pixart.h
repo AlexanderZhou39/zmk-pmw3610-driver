@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-enum pixart_input_mode { MOVE = 0, SCROLL, SNIPE };
+enum pixart_input_mode { MOVE = 0, SCROLL, SNIPE, SCROLL_SNIPE, FAST_SCROLL };
 
 /* device data structure */
 struct pixart_data {
@@ -55,10 +55,14 @@ struct pixart_config {
     struct gpio_dt_spec irq_gpio;
     struct spi_dt_spec bus;
     struct gpio_dt_spec cs_gpio;
-    size_t scroll_layers_len;
-    int32_t *scroll_layers;
-    size_t snipe_layers_len;
-    int32_t *snipe_layers;
+    // size_t scroll_layers_len;
+    // int32_t *scroll_layers;
+    // size_t snipe_layers_len;
+    // int32_t *snipe_layers;
+    int16_t scroll_layer;
+    int16_t snipe_layer;
+    int16_t scroll_snipe_layer;
+    int16_t fast_scroll_layer;
 };
 
 #ifdef __cplusplus

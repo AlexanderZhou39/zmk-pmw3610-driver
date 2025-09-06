@@ -9,12 +9,18 @@ properties:
   irq-gpios:
     type: phandle-array
     required: true
-  scroll-layers:
-    type: array
-    default: []
-  snipe-layers:
-    type: array
-    default: []
+  scroll-layer:
+    type: int
+    default: 3
+  snipe-layer:
+    type: int
+    default: 4
+  scroll-snipe-layer:
+    type: int
+    default: 6
+  fast-scroll-layer:
+    type: int
+    default: 7
   automouse-layer:
     type: int
     default: -1

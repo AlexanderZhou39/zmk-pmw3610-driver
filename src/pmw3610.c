@@ -564,15 +564,18 @@ K_TIMER_DEFINE(automouse_layer_timer, deactivate_automouse_layer, NULL);
 static enum pixart_input_mode get_input_mode_for_current_layer(const struct device *dev) {
     const struct pixart_config *config = dev->config;
     uint8_t curr_layer = zmk_keymap_highest_layer_active();
-    for (size_t i = 0; i < config->scroll_layers_len; i++) {
-        if (curr_layer == config->scroll_layers[i]) {
-            return SCROLL;
-        }
+
+    if (curr_layer == config->fast_scroll_layer) {
+      return FAST_SCROLL
     }
-    for (size_t i = 0; i < config->snipe_layers_len; i++) {
-        if (curr_layer == config->snipe_layers[i]) {
-            return SNIPE;
-        }
+    if (curr_layer == config->scroll_snipe_layer) {
+      return SCROLL_SNIPE
+    }
+    if (curr_layer == config->scroll_layer) {
+      return SCROLL
+    }
+    if (curr_layer == config->snipe_layer) {
+      return SNIPE
     }
     return MOVE;
 }
@@ -595,7 +598,7 @@ static int pmw3610_report_data(const struct device *dev) {
         dividor = CONFIG_PMW3610_CPI_DIVIDOR;
         break;
     case SCROLL:
-        set_cpi_if_needed(dev, CONFIG_PMW3610_CPI);
+        set_cpi_if_needed(dev, CONFIG_PMW3610_SCROLL_CPI);
         if (input_mode_changed) {
             data->scroll_delta_x = 0;
             data->scroll_delta_y = 0;
@@ -605,6 +608,22 @@ static int pmw3610_report_data(const struct device *dev) {
     case SNIPE:
         set_cpi_if_needed(dev, CONFIG_PMW3610_SNIPE_CPI);
         dividor = CONFIG_PMW3610_SNIPE_CPI_DIVIDOR;
+        break;
+    case SCROLL_SNIPE:
+        set_cpi_if_needed(dev, CONFIG_PMW3610_SCROLL_SNIPE_CPI)
+        if (input_mode_changed) {
+            data->scroll_delta_x = 0;
+            data->scroll_delta_y = 0;
+        }
+        dividor = 1;
+        break;
+    case FAST_SCROLL:
+        set_cpi_if_needed(dev, CONFIG_PMW3610_FAST_SCROLL_CPI)
+        if (input_mode_changed) {
+            data->scroll_delta_x = 0;
+            data->scroll_delta_y = 0;
+        }
+        dividor = 1;
         break;
     default:
         return -ENOTSUP;
@@ -813,8 +832,10 @@ static int pmw3610_init(const struct device *dev) {
 
 #define PMW3610_DEFINE(n)                                                                          \
     static struct pixart_data data##n;                                                             \
-    static int32_t scroll_layers##n[] = DT_PROP(DT_DRV_INST(n), scroll_layers);                    \
-    static int32_t snipe_layers##n[] = DT_PROP(DT_DRV_INST(n), snipe_layers);                      \
+    static int16_t scroll_layer##n[] = DT_PROP(DT_DRV_INST(n), scroll_layer);                      \
+    static int16_t snipe_layer##n[] = DT_PROP(DT_DRV_INST(n), snipe_layer);                        \
+    static int16_t scroll_snipe_layer##n[] = DT_PROP(DT_DRV_INST(n), scroll_snipe_layer);          \
+    static int16_t fast_scroll_layer##n[] = DT_PROP(DT_DRV_INST(n), fast_scroll_layer);            \
     static const struct pixart_config config##n = {                                                \
         .irq_gpio = GPIO_DT_SPEC_INST_GET(n, irq_gpios),                                           \
         .bus =                                                                                     \
@@ -829,10 +850,10 @@ static int pmw3610_init(const struct device *dev) {
                     },                                                                             \
             },                                                                                     \
         .cs_gpio = SPI_CS_GPIOS_DT_SPEC_GET(DT_DRV_INST(n)),                                       \
-        .scroll_layers = scroll_layers##n,                                                         \
-        .scroll_layers_len = DT_PROP_LEN(DT_DRV_INST(n), scroll_layers),                           \
-        .snipe_layers = snipe_layers##n,                                                           \
-        .snipe_layers_len = DT_PROP_LEN(DT_DRV_INST(n), snipe_layers),                             \
+        .scroll_layer = scroll_layer##n,                                                           \
+        .snipe_layer = snipe_layer##n,                                                             \
+        .scroll_snipe_layer = scroll_snipe_layer##n,                                               \
+        .fast_scroll_layer = fast_scroll_layer##n,                                                 \
     };                                                                                             \
                                                                                                    \
     DEVICE_DT_INST_DEFINE(n, pmw3610_init, NULL, &data##n, &config##n, POST_KERNEL,                \
