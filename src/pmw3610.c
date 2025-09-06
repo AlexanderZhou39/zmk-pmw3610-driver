@@ -832,10 +832,10 @@ static int pmw3610_init(const struct device *dev) {
 
 #define PMW3610_DEFINE(n)                                                                          \
     static struct pixart_data data##n;                                                             \
-    static int16_t scroll_layer##n = DT_INST_PROP(n, scroll_layer);                                \
-    static int16_t snipe_layer##n = DT_INST_PROP(n, snipe_layer);                                  \
-    static int16_t scroll_snipe_layer##n = DT_INST_PROP(n, scroll_snipe_layer);                    \
-    static int16_t fast_scroll_layer##n = DT_INST_PROP(n, fast_scroll_layer);                      \
+    static const int16_t scroll_layer##n = DT_INST_PROP(n, scroll_layer);                                \
+    static const int16_t snipe_layer##n = DT_INST_PROP(n, snipe_layer);                                  \
+    static const int16_t scroll_snipe_layer##n = DT_INST_PROP(n, scroll_snipe_layer);                    \
+    static const int16_t fast_scroll_layer##n = DT_INST_PROP(n, fast_scroll_layer);                      \
     static const struct pixart_config config##n = {                                                \
         .irq_gpio = GPIO_DT_SPEC_INST_GET(n, irq_gpios),                                           \
         .bus =                                                                                     \
