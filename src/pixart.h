@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-enum pixart_input_mode { MOVE = 0, SCROLL, SNIPE, SCROLL_SNIPE, FAST_SCROLL };
+enum pixart_input_mode { MOVE = 0, SCROLL, SNIPE, SCROLL_SNIPE, FAST_SCROLL, PERMA_SCROLL };
 
 /* device data structure */
 struct pixart_data {
@@ -63,6 +63,7 @@ struct pixart_config {
     int16_t snipe_layer;
     int16_t scroll_snipe_layer;
     int16_t fast_scroll_layer;
+    int16_t perma_scroll_layer;
 };
 
 #ifdef __cplusplus

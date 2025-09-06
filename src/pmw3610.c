@@ -574,6 +574,9 @@ static enum pixart_input_mode get_input_mode_for_current_layer(const struct devi
     if (curr_layer == config->scroll_layer) {
       return SCROLL;
     }
+    if (curr_layer == config->perma_scroll_layer) {
+      return PERMA_SCROLL;
+    }
     if (curr_layer == config->snipe_layer) {
       return SNIPE;
     }
@@ -597,6 +600,7 @@ static int pmw3610_report_data(const struct device *dev) {
         set_cpi_if_needed(dev, CONFIG_PMW3610_CPI);
         dividor = CONFIG_PMW3610_CPI_DIVIDOR;
         break;
+    case PERMA_SCROLL:
     case SCROLL:
         set_cpi_if_needed(dev, CONFIG_PMW3610_SCROLL_CPI);
         if (input_mode_changed) {
@@ -838,6 +842,7 @@ static int pmw3610_init(const struct device *dev) {
     static const int16_t snipe_layer##n = DT_INST_PROP(n, snipe_layer);                                  \
     static const int16_t scroll_snipe_layer##n = DT_INST_PROP(n, scroll_snipe_layer);                    \
     static const int16_t fast_scroll_layer##n = DT_INST_PROP(n, fast_scroll_layer);                      \
+    static const int16_t perma_scroll_layer##n = DT_INST_PROP(n, perma_scroll_layer);                      \
     static const struct pixart_config config##n = {                                                \
         .irq_gpio = GPIO_DT_SPEC_INST_GET(n, irq_gpios),                                           \
         .bus =                                                                                     \
@@ -856,6 +861,7 @@ static int pmw3610_init(const struct device *dev) {
         .snipe_layer = snipe_layer##n,                                                             \
         .scroll_snipe_layer = scroll_snipe_layer##n,                                               \
         .fast_scroll_layer = fast_scroll_layer##n,                                                 \
+        .perma_scroll_layer = perma_scroll_layer##n,                                                 \
     };                                                                                             \
                                                                                                    \
     DEVICE_DT_INST_DEFINE(n, pmw3610_init, NULL, &data##n, &config##n, POST_KERNEL,                \
